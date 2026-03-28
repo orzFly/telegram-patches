@@ -17,8 +17,9 @@ Prepare the source code or build metadata for Telegram Desktop using one of:
 
 - [telegramdesktop/tdesktop](https://github.com/telegramdesktop/tdesktop) — upstream source
 - [flathub/org.telegram.desktop](https://github.com/flathub/org.telegram.desktop) — Flatpak build metadata
-- Your distro's package build scripts (e.g., Arch Linux PKGBUILD)
+- [archlinux/packaging/packages/telegram-desktop](https://gitlab.archlinux.org/archlinux/packaging/packages/telegram-desktop) — Arch Linux PKGBUILD
+- Your distro's package build scripts
 
 Then, give the following prompt to your coding agent:
 
-> Integrate the patch from https://github.com/orzFly/telegram-patches/tree/master/desktop, and build for me. If version is not matched, try to rebase the patch with the help of the markdown file. If the patch is changed, ask the user to submit the updated patch back to the repo.
+> Integrate the patches from https://github.com/orzFly/telegram-patches and build Telegram Desktop for me. If the target version doesn't match, rebase the patch accordingly — refer to the accompanying markdown file for context and porting hints. If you had to modify the patch to make it apply, kindly ask the user to submit the updated patch back to the repository.
