@@ -202,7 +202,7 @@ index f3d69fc..fb7a698 100644
  }
  
 diff --git a/Telegram/SourceFiles/history/view/reactions/history_view_reactions.cpp b/Telegram/SourceFiles/history/view/reactions/history_view_reactions.cpp
-index 4a3378f..ae2a168 100644
+index 4a3378f..2757553 100644
 --- a/Telegram/SourceFiles/history/view/reactions/history_view_reactions.cpp
 +++ b/Telegram/SourceFiles/history/view/reactions/history_view_reactions.cpp
 @@ -932,6 +932,25 @@ InlineListData InlineListDataFromMessage(not_null<Element*> view) {
@@ -231,22 +231,52 @@ index 4a3378f..ae2a168 100644
  	const auto shouldAddEmptyPaidButton = [&] {
  		if (view->context() == Context::ChatPreview) {
  			return false;
-@@ -993,9 +1012,12 @@ InlineListData InlineListDataFromMessage(not_null<Element*> view) {
+@@ -974,8 +993,19 @@ InlineListData InlineListDataFromMessage(not_null<Element*> view) {
+ 		}
+ 	} else {
+ 		const auto &recent = item->recentReactions();
++		auto filtered = base::flat_map<
++			ReactionId,
++			std::vector<not_null<PeerData*>>>();
++		for (const auto &[id, list] : recent) {
++			auto &peers = filtered[id];
++			for (const auto &reaction : list) {
++				if (!reaction.peer->isBlocked()) {
++					peers.push_back(reaction.peer);
++				}
++			}
++		}
+ 		const auto showUserpics = [&] {
+-			if (recent.size() != result.reactions.size()) {
++			if (filtered.size() != result.reactions.size()) {
+ 				return false;
+ 			}
+ 			auto sum = 0;
+@@ -983,20 +1013,16 @@ InlineListData InlineListDataFromMessage(not_null<Element*> view) {
+ 				if ((sum += reaction.count) > kMaxRecentUserpics) {
+ 					return false;
+ 				}
+-				const auto i = recent.find(reaction.id);
+-				if (i == end(recent) || reaction.count != i->second.size()) {
++				const auto i = filtered.find(reaction.id);
++				if (i == end(filtered)
++					|| reaction.count != int(i->second.size())) {
+ 					return false;
+ 				}
+ 			}
+ 			return true;
+ 		}();
  		if (showUserpics) {
- 			result.recent.reserve(recent.size());
- 			for (const auto &[id, list] : recent) {
+-			result.recent.reserve(recent.size());
+-			for (const auto &[id, list] : recent) {
 -				result.recent.emplace(id).first->second = list
 -					| ranges::views::transform(&Data::RecentReaction::peer)
 -					| ranges::to_vector;
-+				auto &peers = result.recent.emplace(id).first->second;
-+				for (const auto &reaction : list) {
-+					if (!reaction.peer->isBlocked()) {
-+						peers.push_back(reaction.peer);
-+					}
-+				}
- 			}
+-			}
++			result.recent = std::move(filtered);
  		}
  	}
+ 	result.flags = (view->hasOutLayout() ? Flag::OutLayout : Flag())
 diff --git a/Telegram/SourceFiles/window/notifications_manager.cpp b/Telegram/SourceFiles/window/notifications_manager.cpp
 index daf0b84..a2d4147 100644
 --- a/Telegram/SourceFiles/window/notifications_manager.cpp
