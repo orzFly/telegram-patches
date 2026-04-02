@@ -1,0 +1,18 @@
+diff --git a/Telegram/SourceFiles/ui/controls/window_screen_reader_bar.cpp b/Telegram/SourceFiles/ui/controls/window_screen_reader_bar.cpp
+index 8920ecf..c8b46e0 100644
+--- a/Telegram/SourceFiles/ui/controls/window_screen_reader_bar.cpp
++++ b/Telegram/SourceFiles/ui/controls/window_screen_reader_bar.cpp
+@@ -203,12 +203,7 @@ object_ptr<RpWidget> CreateScreenReaderBar(
+ 		}
+ 	}, wrap->lifetime());
+ 
+-	Ui::ScreenReaderModeActiveValue(
+-	) | rpl::on_next([=](bool active) {
+-		wrap->toggle(active, anim::type::normal);
+-	}, wrap->lifetime());
+-
+-	wrap->toggle(Ui::ScreenReaderModeActive(), anim::type::instant);
++	wrap->toggle(false, anim::type::instant);
+ 
+ 	wrap->entity()->resizeToWidth(st::windowMinWidth);
+ 

@@ -8,8 +8,13 @@ Custom patches for Telegram clients.
 
 **Hide Messages from Blocked Contacts** — Comprehensively hides blocked contacts' presence in group chats: messages, chat list preview, notifications, reactions, typing indicators, unread counters, and quoted messages.
 
-- [`tdesktop-hide-blocked-messages.patch`](desktop/tdesktop-hide-blocked-messages.patch) — Unified diff against tdesktop v6.6.4
+- [`tdesktop-hide-blocked-messages.patch`](desktop/tdesktop-hide-blocked-messages.patch) — Unified diff against tdesktop v6.7.1
 - [`tdesktop-hide-blocked-messages.md`](desktop/tdesktop-hide-blocked-messages.md) — Feature documentation and porting hints
+
+**Hide Screen Reader Mode Banner** — Suppresses the "Telegram is working in Screen Reader mode." notification bar without disabling screen reader functionality.
+
+- [`tdesktop-hide-screen-reader-bar.patch`](desktop/tdesktop-hide-screen-reader-bar.patch) — Unified diff against tdesktop v6.7.1
+- [`tdesktop-hide-screen-reader-bar.md`](desktop/tdesktop-hide-screen-reader-bar.md) — Feature documentation and porting hints
 
 ## How to use
 
