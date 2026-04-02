@@ -45,12 +45,12 @@ index ca2000f..9a9a9c6 100644
  
  	MTP::Sender _api;
 diff --git a/Telegram/SourceFiles/apiwrap.cpp b/Telegram/SourceFiles/apiwrap.cpp
-index b7e86f2..665e0ef 100644
+index ccc2891..446ff45 100644
 --- a/Telegram/SourceFiles/apiwrap.cpp
 +++ b/Telegram/SourceFiles/apiwrap.cpp
-@@ -204,6 +204,8 @@ ApiWrap::ApiWrap(not_null<Main::Session*> session)
- 		}, _session->lifetime());
+@@ -212,6 +212,8 @@ ApiWrap::ApiWrap(not_null<Main::Session*> session)
  
+ 		_reactionsNotifySettings->reload();
  		setupSupportMode();
 +
 +		_blockedPeers->reload();
@@ -72,10 +72,10 @@ index ea8f92b..50c3027 100644
  	if (!sendAction) {
  		return;
 diff --git a/Telegram/SourceFiles/history/history.cpp b/Telegram/SourceFiles/history/history.cpp
-index b7dc560..c3e894b 100644
+index 7d5e250..7884051 100644
 --- a/Telegram/SourceFiles/history/history.cpp
 +++ b/Telegram/SourceFiles/history/history.cpp
-@@ -1454,7 +1454,11 @@ void History::newItemAdded(not_null<HistoryItem*> item) {
+@@ -1542,7 +1542,11 @@ void History::newItemAdded(not_null<HistoryItem*> item) {
  			peer->updateFullForced();
  		}
  	} else {
@@ -88,7 +88,7 @@ index b7dc560..c3e894b 100644
  			if (unreadCountKnown()) {
  				setUnreadCount(unreadCount() + 1);
  			} else if (!isForum()) {
-@@ -2775,10 +2779,35 @@ auto History::computeChatListMessageFromLast() const
+@@ -2884,10 +2888,35 @@ auto History::computeChatListMessageFromLast() const
  		return _lastMessage;
  	}
  
@@ -126,10 +126,10 @@ index b7dc560..c3e894b 100644
  		return _lastMessage;
  	}
 diff --git a/Telegram/SourceFiles/history/history_item.cpp b/Telegram/SourceFiles/history/history_item.cpp
-index b73ff70..03fd189 100644
+index 761a861..68e346f 100644
 --- a/Telegram/SourceFiles/history/history_item.cpp
 +++ b/Telegram/SourceFiles/history/history_item.cpp
-@@ -4498,7 +4498,20 @@ void HistoryItem::updateReactions(const MTPMessageReactions *reactions) {
+@@ -4611,7 +4611,20 @@ void HistoryItem::updateReactions(const MTPMessageReactions *reactions) {
  		return;
  	}
  	const auto hasUnread = _reactions && _reactions->hasUnread();
@@ -152,10 +152,10 @@ index b73ff70..03fd189 100644
  
  		addToUnreadThings(HistoryUnreadThings::AddType::New);
 diff --git a/Telegram/SourceFiles/history/history_item_components.cpp b/Telegram/SourceFiles/history/history_item_components.cpp
-index 5655bff..908ce12 100644
+index d671523..8400bc6 100644
 --- a/Telegram/SourceFiles/history/history_item_components.cpp
 +++ b/Telegram/SourceFiles/history/history_item_components.cpp
-@@ -496,6 +496,10 @@ void HistoryMessageReply::updateData(
+@@ -501,6 +501,10 @@ void HistoryMessageReply::updateData(
  				// Really it is deleted.
  				resolvedMessage = nullptr;
  				force = true;
@@ -167,10 +167,10 @@ index 5655bff..908ce12 100644
  				holder->history()->owner().registerDependentMessage(
  					holder,
 diff --git a/Telegram/SourceFiles/history/view/history_view_element.cpp b/Telegram/SourceFiles/history/view/history_view_element.cpp
-index f3d69fc..fb7a698 100644
+index e568895..3765430 100644
 --- a/Telegram/SourceFiles/history/view/history_view_element.cpp
 +++ b/Telegram/SourceFiles/history/view/history_view_element.cpp
-@@ -1410,7 +1410,19 @@ bool Element::isHiddenByGroup() const {
+@@ -1422,7 +1422,19 @@ bool Element::isHiddenByGroup() const {
  }
  
  bool Element::isHidden() const {
@@ -191,7 +191,7 @@ index f3d69fc..fb7a698 100644
  }
  
  void Element::overrideMedia(std::unique_ptr<Media> media) {
-@@ -2154,6 +2166,9 @@ QSize Element::countCurrentSize(int newWidth) {
+@@ -2172,6 +2184,9 @@ QSize Element::countCurrentSize(int newWidth) {
  	if (_flags & Flag::NeedsResize) {
  		initDimensions();
  	}
@@ -202,10 +202,10 @@ index f3d69fc..fb7a698 100644
  }
  
 diff --git a/Telegram/SourceFiles/history/view/reactions/history_view_reactions.cpp b/Telegram/SourceFiles/history/view/reactions/history_view_reactions.cpp
-index 4a3378f..2757553 100644
+index 130b8eb..5f7a902 100644
 --- a/Telegram/SourceFiles/history/view/reactions/history_view_reactions.cpp
 +++ b/Telegram/SourceFiles/history/view/reactions/history_view_reactions.cpp
-@@ -932,6 +932,25 @@ InlineListData InlineListDataFromMessage(not_null<Element*> view) {
+@@ -916,6 +916,25 @@ InlineListData InlineListDataFromMessage(not_null<Element*> view) {
  	auto result = InlineListData();
  	result.reactions = item->reactionsWithLocal();
  
@@ -231,7 +231,7 @@ index 4a3378f..2757553 100644
  	const auto shouldAddEmptyPaidButton = [&] {
  		if (view->context() == Context::ChatPreview) {
  			return false;
-@@ -974,8 +993,19 @@ InlineListData InlineListDataFromMessage(not_null<Element*> view) {
+@@ -958,8 +977,19 @@ InlineListData InlineListDataFromMessage(not_null<Element*> view) {
  		}
  	} else {
  		const auto &recent = item->recentReactions();
@@ -252,7 +252,7 @@ index 4a3378f..2757553 100644
  				return false;
  			}
  			auto sum = 0;
-@@ -983,20 +1013,16 @@ InlineListData InlineListDataFromMessage(not_null<Element*> view) {
+@@ -967,20 +997,16 @@ InlineListData InlineListDataFromMessage(not_null<Element*> view) {
  				if ((sum += reaction.count) > kMaxRecentUserpics) {
  					return false;
  				}
@@ -278,10 +278,10 @@ index 4a3378f..2757553 100644
  	}
  	result.flags = (view->hasOutLayout() ? Flag::OutLayout : Flag())
 diff --git a/Telegram/SourceFiles/window/notifications_manager.cpp b/Telegram/SourceFiles/window/notifications_manager.cpp
-index daf0b84..a2d4147 100644
+index 6ab4949..e3ee9aa 100644
 --- a/Telegram/SourceFiles/window/notifications_manager.cpp
 +++ b/Telegram/SourceFiles/window/notifications_manager.cpp
-@@ -344,17 +344,21 @@ System::SkipState System::computeSkipState(
+@@ -347,17 +347,21 @@ System::SkipState System::computeSkipState(
  	if (messageType && notifySettings->muteUnknown(thread)) {
  		return { SkipState::Unknown };
  	} else if (messageType && !notifySettings->isMuted(thread)) {
