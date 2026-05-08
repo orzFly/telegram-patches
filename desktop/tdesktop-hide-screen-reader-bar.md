@@ -1,6 +1,6 @@
 # Patch: Hide Screen Reader Mode Banner
 
-Patch target: **tdesktop v6.7.1** (commit `666e40f`)
+Patch target: **tdesktop v6.8.1** (commit `6556c8f`)
 
 ## What it does
 
