@@ -1,6 +1,6 @@
 # Patch: Hide Messages from Blocked Contacts
 
-Patch target: **tdesktop v6.8.1** (commit `6556c8f`)
+Patch target: **tdesktop v6.9.1** (commit `1380c62`)
 
 ## What it does
 
