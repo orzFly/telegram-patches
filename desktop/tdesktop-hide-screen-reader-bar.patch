@@ -1,5 +1,5 @@
 diff --git a/Telegram/SourceFiles/ui/controls/window_screen_reader_bar.cpp b/Telegram/SourceFiles/ui/controls/window_screen_reader_bar.cpp
-index 8920ecf..c8b46e0 100644
+index 8920ecff58..c8b46e0301 100644
 --- a/Telegram/SourceFiles/ui/controls/window_screen_reader_bar.cpp
 +++ b/Telegram/SourceFiles/ui/controls/window_screen_reader_bar.cpp
 @@ -203,12 +203,7 @@ object_ptr<RpWidget> CreateScreenReaderBar(
